@@ -1,0 +1,26 @@
+{
+    "name": "tigokr/yii2-tickets",
+    "description": "Just tickets with email notification",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","tickets"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Artem Dekhtyar",
+            "email": "mail@artemd.ru"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": ">=2.0.4",
+        "yiisoft/yii2-bootstrap": "*",
+        "yiisoft/yii2-imagine": "~2.0.0",
+        "vova07/yii2-imperavi-widget": "*",
+        "yiisoft/yii2-swiftmailer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "tigokr\\tickets\\": ""
+        }
+    }
+}
