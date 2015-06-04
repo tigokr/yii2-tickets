@@ -5,9 +5,8 @@ namespace tigokr\tickets;
 class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
 {
     public $controllerNamespace = 'tigokr\tickets\controllers';
-    public $defaultRoute = 'default';
-
-    public $behaviors;
+    public $defaultRoute = 'default/index';
+    public $author;
 
     public function bootstrap($app)
     {
@@ -25,5 +24,13 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
         parent::init();
 
         \Yii::configure($this, require(__DIR__ . '/config.php'));
+    }
+
+    // abstract method
+    public function getAuthor(){
+        if(!empty($this->author))
+            return new $this->author;
+        else
+            return null;
     }
 }

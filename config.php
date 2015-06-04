@@ -12,6 +12,10 @@ return [
         ],
     ],
     'params'=>[
-        'adminEmail' => 'admin@extweb.org',
+        'adminEmail' => [
+            'admin@extweb.org',
+            'vysg81@gmail.com',
+        ],
+        'noreplyEmail' => 'noreply@c21center.ru',
     ],
 ];
