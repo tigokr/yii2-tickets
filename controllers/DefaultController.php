@@ -52,7 +52,6 @@ class DefaultController extends \yii\web\Controller
      */
     public function actionIndex()
     {
-        $author = $this->module->getAuthor();
         $searchModel = new MessageSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         if(!\Yii::$app->user->can('admin')) {
