@@ -20,6 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
 
                 <div class="box-tools pull-right">
+                    <?php if(\Yii::$app->user->can('root')): ?>
+                    <?= Html::a(\Yii::t('app', 'Редактировать'), ['update', 'id' => $model->id], ['class' => 'btn btn-box-tool']) ?>
+                    <?php endif; ?>
                     <?= Html::a(Yii::t('app', 'Удалить'), ['delete', 'id' => $model->id], [
                         'class' => 'btn text-red btn-box-tool',
                         'data' => [

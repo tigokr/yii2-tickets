@@ -143,6 +143,10 @@ class DefaultController extends \yii\web\Controller
      */
     public function actionUpdate($id)
     {
+        if(!\Yii::$app->user->can('root')) {
+            $this->redirect(['index']);
+        }
+
         $model = $this->findModel($id);
         if($model->type == Message::TYPE_ABUSE && !\Yii::$app->user->can('admin')) {
             $this->redirect(['index']);
