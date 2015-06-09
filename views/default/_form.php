@@ -1,14 +1,20 @@
 <?php
 
+use kartik\widgets\DateTimePicker;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use \tigokr\tickets\models\Message;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model admin\models\Message */
+/* @var $model \tigokr\tickets\models\Message; */
 /* @var $form yii\bootstrap\ActiveForm */
+
+$userClass = $this->context->module->getAuthor();
+
 ?>
 
-<?php $form = ActiveForm::begin(['fieldClass' => 'admin\themes\adminlte\widgets\ExtendedActiveField', 'options' => ['enctype' => 'multipart/form-data']]); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
 <div class="row message-form">
     <div class="col-md-12">
@@ -22,19 +28,33 @@ use yii\bootstrap\ActiveForm;
             <div class="box-body">
 
 
-              <?= $form->field($model, 'author_id')->textInput(['maxlength' => true]) ?>
+              <?= $form->field($model, 'author_id')->dropDownList(\yii\helpers\ArrayHelper::map($userClass::find()->all(), 'id', 'name')) ?>
 
-              <?= $form->field($model, 'type')->textInput() ?>
+              <?= $form->field($model, 'type')->dropDownList(Message::type(null, 'ru')) ?>
 
-              <?= $form->field($model, 'anon')->textInput() ?>
+              <?= $form->field($model, 'anon')->checkbox() ?>
 
-              <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
+              <?= $form->field($model, 'text')->widget(\vova07\imperavi\Widget::className(), [
+                  'settings' => [
+                      'lang' => 'ru',
+                      'minHeight' => 200,
+                      'plugins' => [
+                          'clips',
+                          'fullscreen',
+                          'imagemanager'
+                      ],
+                      'imageManagerJson' => Url::to(['images-get']),
+                      'imageUpload' => Url::to(['image-upload']),
+                  ]
+              ]); ?>
 
-              <?= $form->field($model, 'file')->textarea(['rows' => 6]) ?>
+              <?= $form->field($model, 'created_at')->widget(DateTimePicker::className(), [
+                  'model'=>$model,
+                  'attribute'=>'created_at',
+                  'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+              ]) ?>
 
-              <?= $form->field($model, 'created_at')->textInput() ?>
-
-              <?= $form->field($model, 'status')->textInput() ?>
+              <?= $form->field($model, 'status')->dropDownList(Message::status(null, 'ru')) ?>
 
 
             </div>

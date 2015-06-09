@@ -16,7 +16,9 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-imagine": "~2.0.0",
         "vova07/yii2-imperavi-widget": "*",
-        "yiisoft/yii2-swiftmailer": "*"
+        "yiisoft/yii2-swiftmailer": "*",
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-date-range": "*"
     },
     "autoload": {
         "psr-4": {

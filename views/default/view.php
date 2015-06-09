@@ -1,15 +1,15 @@
 <?php
 
-use admin\models\Message;
+use tigokr\tickets\models\Message;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model admin\models\Message */
+/* @var $model tigokr\tickets\models\Message */
 
-$this->params['partTitle'] = \Yii::t('app', 'message');
+$this->params['partTitle'] = \Yii::t('app', 'Сообщения');
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Messages'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Сообщения'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

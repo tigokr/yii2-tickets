@@ -82,7 +82,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view} {delete}',
+                    'buttons' => [
+                        'update'=> function ($url, $model, $key) {
+                            $can = \Yii::$app->user->can('root');
+                            return $can ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url) : '';
+                        },
+                        'view'=> function ($url, $model, $key) {
+                            $can = true;
+                            return $can ? Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url) : '';
+                        },
+                        'delete'=> function ($url, $model, $key) {
+                            $can = $model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('manager');
+                            return $can ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url) : '';
+                        },
+                    ]
+
                 ],
             ],
         ]); ?>
