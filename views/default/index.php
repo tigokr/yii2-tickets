@@ -92,8 +92,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             return $can ? Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url) : '';
                         },
                         'delete'=> function ($url, $model, $key) {
-                            $can = $model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('manager');
-                            return $can ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url) : '';
+                            $can = $model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('admin');
+                            return $can ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, ['data' => [
+                                'confirm' => Yii::t('app', 'Вы уверены, что хотите удалить этот объект?'),
+                                'method' => 'post',
+                            ]]) : '';
                         },
                     ]
 

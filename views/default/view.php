@@ -58,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'file:url',
                         'created_at',
-                        'status',
                     ],
                 ]) ?>
             </div>

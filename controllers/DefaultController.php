@@ -166,10 +166,7 @@ class DefaultController extends \yii\web\Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if($model->type == Message::TYPE_ABUSE && !\Yii::$app->user->can('admin')) {
-            $this->redirect(['index']);
-        }
-        $model->delete();
+        $model::updateAll(['status'=>Message::STATUS_DELETED],['id'=>$id]);
 
         return $this->redirect(['index']);
     }

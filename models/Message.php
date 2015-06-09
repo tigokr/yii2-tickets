@@ -23,6 +23,7 @@ class Message extends \yii\db\ActiveRecord
     const STATUS_NEW = 10;
     const STATUS_INWORK = 20;
     const STATUS_SOLVED = 30;
+    const STATUS_DELETED = 40;
 
     public static function status($v = null, $ln = 'ru'){
         switch($ln){
@@ -30,7 +31,8 @@ class Message extends \yii\db\ActiveRecord
                 $list = [
                     self::STATUS_NEW => 'maroon',
                     self::STATUS_INWORK => 'olive',
-                    self::STATUS_SOLVED => 'gray',
+                    self::STATUS_SOLVED => 'green',
+                    self::STATUS_DELETED => 'gray',
                 ];
                 break;
             case 'en':
@@ -38,6 +40,7 @@ class Message extends \yii\db\ActiveRecord
                     self::STATUS_NEW => 'new',
                     self::STATUS_INWORK => 'inwork',
                     self::STATUS_SOLVED => 'solved',
+                    self::STATUS_DELETED => 'deleted',
                 ];
                 break;
             default:
@@ -45,6 +48,7 @@ class Message extends \yii\db\ActiveRecord
                     self::STATUS_NEW => 'Новое',
                     self::STATUS_INWORK => 'В работе',
                     self::STATUS_SOLVED => 'Решено',
+                    self::STATUS_DELETED => 'Удалено',
 
                 ];
                 break;
@@ -129,12 +133,11 @@ class Message extends \yii\db\ActiveRecord
     {
         return [
             [['author_id', 'type', 'status'], 'integer'],
-            [['type', 'text', 'anon', 'status'], 'required'],
+            [['type', 'text', 'status'], 'required'],
             [['text', 'file'], 'string'],
             [['created_at'], 'safe'],
-            [['anon'], 'boolean', 'trueValue' => true, 'falseValue' => false, 'strict' => true],
-
-            [['file'], 'default', 'value'=>null],
+            [['anon'], 'boolean'],
+            [['file', 'anon'], 'default', 'value'=>null],
         ];
     }
 
