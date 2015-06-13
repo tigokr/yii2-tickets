@@ -8,7 +8,8 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
 {
     public $controllerNamespace = 'tigokr\tickets\controllers';
     public $defaultRoute = 'default/index';
-    public $author;
+
+    public $userModel;
 
     public function bootstrap($app)
     {
@@ -24,6 +25,8 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
 
             if(isset($this->params['mainMenu']))
                 $this->addMineMenu($this->params['mainMenu']);
+
+
         }
     }
 
@@ -35,9 +38,9 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
     }
 
     // abstract method
-    public function getAuthor(){
-        if(!empty($this->author))
-            return new $this->author;
+    public function getUser(){
+        if(!empty($this->userModel))
+            return new $this->userModel;
         else
             return null;
     }

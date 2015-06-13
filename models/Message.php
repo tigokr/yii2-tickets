@@ -3,12 +3,14 @@
 namespace tigokr\tickets\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "message".
  *
  * @property string $id
  * @property string $author_id
+ * @property string $parent_id
  * @property integer $type
  * @property integer $anon
  * @property string $text
@@ -20,6 +22,7 @@ use Yii;
  */
 class Message extends \yii\db\ActiveRecord
 {
+    const STATUS_RESPONSE = 0;
     const STATUS_NEW = 10;
     const STATUS_INWORK = 20;
     const STATUS_SOLVED = 30;
@@ -95,7 +98,6 @@ class Message extends \yii\db\ActiveRecord
         return $list[$v]?$list[$v]:null;
     }
 
-
     /**
      * @inheritdoc
      */
@@ -105,26 +107,11 @@ class Message extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return MessageQuery
      */
     public static function find() {
         return new MessageQuery(get_called_class());
     }
-
-    /**
-     * @inheritdoc
-     */
-//    public function behaviors()
-//    {
-//        return [
-//            [
-//                'class' => TimestampBehavior::className(),
-//                'updatedAtAttribute'=>false,
-//                'value' => new Expression('NOW()'),
-//            ],
-//        ];
-//    }
-
 
     /**
      * @inheritdoc
@@ -137,7 +124,8 @@ class Message extends \yii\db\ActiveRecord
             [['text', 'file'], 'string'],
             [['created_at'], 'safe'],
             [['anon'], 'boolean'],
-            [['file', 'anon'], 'default', 'value'=>null],
+            [['file', 'parent_id'], 'default', 'value'=>null],
+            [['anon'], 'default', 'value'=>false],
         ];
     }
 
@@ -149,6 +137,7 @@ class Message extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app.models.Message', 'ID'),
             'author_id' => Yii::t('app.models.Message', 'Автор'),
+            'parent_id' => Yii::t('app.models.Message', 'Ответ'),
             'type' => Yii::t('app.models.Message', 'Тип'),
             'anon' => Yii::t('app.models.Message', 'Анонимка'),
             'text' => Yii::t('app.models.Message', 'Текст'),
@@ -158,13 +147,43 @@ class Message extends \yii\db\ActiveRecord
         ];
     }
 
+    public function afterSave($insert, $changedAttributes) {
+        $this->makeThread();
+
+        parent::afterSave($insert, $changedAttributes);
+
+    }
+
+    public function makeThread(){
+        if($this->parent) {
+            self::updateAll(['thread'=>$this->parent->thread], 'id='.$this->id);
+        } else {
+            self::updateAll(['thread'=>$this->id], 'id='.$this->id);
+        }
+        $this->refresh();
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getAuthor()
     {
-        $user = \Yii::$app->controller->module->getAuthor();
+        $userModel = \Yii::$app->controller->module->userModel;
+        return $userModel?$this->hasOne($userModel, ['id' => 'author_id']):null;
+    }
 
-        return $user?$this->hasOne($user::className(), ['id' => 'author_id']):null;
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(self::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDialog() {
+        return $this->hasMany(self::className(), ['thread'=>'thread']);
     }
 }

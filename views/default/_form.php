@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $model \tigokr\tickets\models\Message; */
 /* @var $form yii\bootstrap\ActiveForm */
 
-$userClass = $this->context->module->getAuthor();
+$userClass = $this->context->module->getUser();
 
 ?>
 

@@ -1,7 +1,6 @@
 <?php
 
 use tigokr\tickets\models\Message;
-
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -19,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-header">
         <h3 class="box-title"><?= Html::encode($this->title); ?></h3>
     </div>
-    <div class="box-body table-responsive">
+    <div class="box-body">
 
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -56,44 +55,57 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'author_id',
                     'format' => 'html',
-                    'label'=>'<i class="fa fa-user  fa-2x"></i>', 'encodeLabel'=>false,
+                    'label' => '<i class="fa fa-user  fa-2x"></i>', 'encodeLabel' => false,
                     'value' => function ($model) {
-                        return $model->author?Html::a($model->author->name, $model->author->urlAdmin):null;
+                        return $model->author ? Html::a($model->author->name, $model->author->urlAdmin) : null;
                     },
-                    'filter' => ($user = $this->context->module->getAuthor())?ArrayHelper::map($user::find()->all(), 'id', 'name'):false,
-                    'visible' => $this->context->module->getAuthor(),
+                    'filter' => ($user = $this->context->module->getUser()) ? ArrayHelper::map($user::find()->all(), 'id', 'name') : false,
+                    'visible' => $this->context->module->getUser(),
                 ],
                 'text:html',
                 'created_at',
                 [
-                    'attribute'=>'file',
-                    'format'=>'raw',
-                    'filter'=>false,
-                    'value'=>function($model){
-                        if(empty($model->file))
+                    'attribute' => 'file',
+                    'format' => 'raw',
+                    'filter' => false,
+                    'value' => function ($model) {
+                        if (empty($model->file))
                             return null;
 
-                        if( strpos(\yii\helpers\FileHelper::getMimeTypeByExtension( $model->file ), 'image') !== false )
-                            return Html::a(Html::img($model->file, ['class'=>'img-responsive']), $model->file, ['target'=>'_blank']);
+                        if (strpos(\yii\helpers\FileHelper::getMimeTypeByExtension($model->file), 'image') !== false)
+                            return Html::a(Html::img($model->file, ['class' => 'img-responsive']), $model->file, ['target' => '_blank']);
 
-                        return Html::a(basename($model->file), $model->file, ['target'=>'_blank']);
+                        return Html::a(basename($model->file), $model->file, ['target' => '_blank']);
                     }
                 ],
 
                 [
                     'class' => 'yii\grid\ActionColumn',
+                    'template' => '
+                    <div class="btn-group" style="display: flex;">
+                    {dialog}
+                      <button data-toggle="dropdown" class="btn btn-default btn-flat btn-sm dropdown-toggle" type="button" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul role="menu" class="dropdown-menu ">
+                        <li>{update}</li>
+                        <li>{delete}</li>
+                      </ul>
+                    </div>
+
+                        ',
                     'buttons' => [
-                        'update'=> function ($url, $model, $key) {
+                        'update' => function ($url, $model, $key) {
                             $can = \Yii::$app->user->can('root');
-                            return $can ? Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url) : '';
+                            return $can ? Html::a('<span class="glyphicon glyphicon-pencil"></span> Изменить', $url) : '';
                         },
-                        'view'=> function ($url, $model, $key) {
-                            $can = true;
-                            return $can ? Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url) : '';
+                        'dialog' => function ($url, $model, $key) {
+                            return Html::a('<span class="fa fa-comments-o"></span> Ответить', $url, ['class'=>'btn btn-default btn-flat btn-sm ']);
                         },
-                        'delete'=> function ($url, $model, $key) {
+                        'delete' => function ($url, $model, $key) {
                             $can = $model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('admin');
-                            return $can ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, ['data' => [
+                            return $can ? Html::a('<span class="glyphicon glyphicon-trash"></span> Удалить', $url, ['data' => [
                                 'confirm' => Yii::t('app', 'Вы уверены, что хотите удалить этот объект?'),
                                 'method' => 'post',
                             ]]) : '';

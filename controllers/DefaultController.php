@@ -59,6 +59,8 @@ class DefaultController extends \yii\web\Controller
             $dataProvider->query->andWhere($searchModel->find()->notAbuse()->where);
         }
 
+        // only start dialog messages
+        $dataProvider->query->andWhere($searchModel->find()->start()->where);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -113,7 +115,7 @@ class DefaultController extends \yii\web\Controller
             $messageForm->submit($type);
 
             \Yii::$app->session->setFlash('success', \Yii::t('app', 'Спасибо за Вашу помощь!'));
-            $this->redirect(['messages/index']);
+            $this->redirect(['/tickets/default/index']);
         }
 
         switch($type) {
@@ -159,6 +161,27 @@ class DefaultController extends \yii\web\Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionDialog($id) {
+        $parent = $this->findModel($id);
+
+        $model = new Message();
+
+        if ($model->load(\Yii::$app->request->post())) {
+            $model->type = $parent->type;
+            $model->parent_id = $parent->id;
+            $model->author_id = \Yii::$app->user->id;
+            $model->status = Message::STATUS_RESPONSE;
+            if($model->save()) {
+                return $this->redirect(['dialog', 'id' => $model->thread]);
+            }
+        }
+
+        return $this->render('dialog', [
+            'parent' => $parent,
+            'model' => $model,
+        ]);
     }
 
     /**

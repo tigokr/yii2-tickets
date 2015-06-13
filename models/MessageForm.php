@@ -81,23 +81,23 @@ class MessageForm extends Model
 
         $email_object->send(); // or may user beautiful template
 
-        $email = new Message();
-        $email->author_id = $this->author_id;
-        $email->anon = (boolean)$this->anon;
-        $email->text = $this->text;
-        $email->type = $this->type;
-        $email->created_at = date('Y-m-d H:i:s');
-        $email->status = Message::STATUS_NEW;
+        $message = new Message();
+        $message->author_id = $this->author_id;
+        $message->anon = (boolean)$this->anon;
+        $message->text = $this->text;
+        $message->type = $this->type;
+        $message->created_at = date('Y-m-d H:i:s');
+        $message->status = Message::STATUS_NEW;
 
         if ($this->file) {
             FileHelper::createDirectory(\Yii::getAlias('@uploads') . '/messages');
             $fn = '/messages/' . $file;
             $this->file->saveAs( \Yii::getAlias('@uploads') . $fn );
-            $email->file = \Yii::getAlias('@hostUrl') . \Yii::getAlias('@uploadsUrl') . $fn;
+            $message->file = \Yii::getAlias('@hostUrl') . \Yii::getAlias('@uploadsUrl') . $fn;
         }
 
 
-        if($email->save())
+        if($message->save())
             return true;
     }
 

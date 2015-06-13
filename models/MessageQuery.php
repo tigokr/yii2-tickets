@@ -21,6 +21,11 @@ use Yii;
  */
 class MessageQuery extends \yii\db\ActiveQuery
 {
+    public function start(){
+        $this->andWhere(['is', 'parent_id', null]);
+        return $this;
+    }
+
     public function abuse(){
         $this->andWhere(['type', Message::TYPE_ABUSE]);
         return $this;
