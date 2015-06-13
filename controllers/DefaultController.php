@@ -193,7 +193,12 @@ class DefaultController extends \yii\web\Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $model::updateAll(['status'=>Message::STATUS_DELETED],['id'=>$id]);
+        if(!($model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('admin'))) {
+            \Yii::$app->session->setFlash('warning', 'У вас нет доступа к этим страницам!');
+            return $this->redirect('/tickets/default/index');
+        }
+
+        $model->deleteThread();
 
         return $this->redirect(['index']);
     }

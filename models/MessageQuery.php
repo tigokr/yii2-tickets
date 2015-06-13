@@ -60,4 +60,9 @@ class MessageQuery extends \yii\db\ActiveQuery
         $this->andWhere(['status', Message::STATUS_SOLVED]);
         return $this;
     }
+
+    public function thread($thread){
+        $this->andWhere(['thread', $thread]);
+        return $this;
+    }
 }

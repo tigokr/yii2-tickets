@@ -149,9 +149,11 @@ class Message extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes) {
         $this->makeThread();
-
         parent::afterSave($insert, $changedAttributes);
+    }
 
+    public function deleteThread(){
+        $this->updateAll(['status'=>self::STATUS_DELETED], 'thread='.$this->thread);
     }
 
     public function makeThread(){
