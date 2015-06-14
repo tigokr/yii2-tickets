@@ -4,6 +4,7 @@ namespace tigokr\tickets\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "message".
@@ -187,5 +188,40 @@ class Message extends \yii\db\ActiveRecord
      */
     public function getDialog() {
         return $this->hasMany(self::className(), ['thread'=>'thread']);
+    }
+
+    public function getDialogUrl(){
+        return Url::to(['/tickets/default/dialog', 'id'=>$this->thread]);
+    }
+
+    public function doNotify($lastMessage)
+    {
+        $messages = self::find()
+            ->select('author_id')
+            ->thread($this->thread)
+            ->groupBy('author_id')
+            ->all();
+
+        foreach($messages as $message) {
+            $user = $message->author;
+
+            $subject = Message::type($this->type, 'ru') . ' | ' . \Yii::$app->name;
+
+            $email_object = \Yii::$app->mailer->compose();
+
+            $email_object
+                ->setTo([$user->email])
+                ->setFrom([\Yii::$app->params['noreplyEmail'] => 'Robot'])
+                ->setSubject($subject)
+                ->setHtmlBody(
+                    '<p>' . $lastMessage->author->name .' '. $lastMessage->author->email .' '.$lastMessage->author->phone.' </p>' .
+                    '<p> <a href="'. \Yii::getAlias('@hostUrl') . $this->dialogUrl.'">Диалог '.$this->thread.'</a></p>'.
+                    '<div><h3>Вопрос: </h3> ' . \yii\helpers\HtmlPurifier::process($this->text) .' </div>' .
+                    '<div><h3>Ответ: </h3> ' . \yii\helpers\HtmlPurifier::process($lastMessage->text) . '</div>'
+                );
+
+            $email_object->send(); // or may user beautiful template
+
+        }
     }
 }

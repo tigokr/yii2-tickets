@@ -62,7 +62,7 @@ class MessageQuery extends \yii\db\ActiveQuery
     }
 
     public function thread($thread){
-        $this->andWhere(['thread', $thread]);
+        $this->andWhere(['=', 'thread', $thread]);
         return $this;
     }
 }

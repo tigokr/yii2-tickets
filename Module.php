@@ -33,7 +33,6 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
     public function init()
     {
         parent::init();
-
         \Yii::configure($this, require(__DIR__ . '/config.php'));
     }
 

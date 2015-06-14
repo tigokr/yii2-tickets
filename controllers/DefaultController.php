@@ -2,6 +2,7 @@
 
 namespace tigokr\tickets\controllers;
 
+use common\components\RbacFilter;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use tigokr\tickets\models\Message;
@@ -174,6 +175,7 @@ class DefaultController extends \yii\web\Controller
             $model->author_id = \Yii::$app->user->id;
             $model->status = Message::STATUS_RESPONSE;
             if($model->save()) {
+                $parent->doNotify($model);
                 return $this->redirect(['dialog', 'id' => $model->thread]);
             }
         }

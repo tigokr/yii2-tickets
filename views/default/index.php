@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => '
                     <div class="btn-group" style="display: flex;">
                     {dialog}
-                      <button data-toggle="dropdown" class="btn btn-default btn-flat btn-sm dropdown-toggle" type="button" aria-expanded="false">
+                      <button data-toggle="dropdown" class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
@@ -101,7 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             return $can ? Html::a('<span class="glyphicon glyphicon-pencil"></span> Изменить', $url) : '';
                         },
                         'dialog' => function ($url, $model, $key) {
-                            return Html::a('<span class="fa fa-comments-o"></span> Ответить', $url, ['class'=>'btn btn-default btn-flat btn-sm ']);
+                            return Html::a('<span class="fa fa-comments-o"></span> Ответить', $url, ['class'=>'btn btn-primary btn-flat btn-sm ']);
                         },
                         'delete' => function ($url, $model, $key) {
                             $can = $model->author_id == \Yii::$app->user->id || \Yii::$app->user->can('admin');
