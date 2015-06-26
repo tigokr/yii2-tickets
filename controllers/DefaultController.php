@@ -155,7 +155,15 @@ class DefaultController extends \yii\web\Controller
             $this->redirect(['index']);
         }
 
+        $status = $model->status;
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+
+            if($model->status != $status) {
+                /**
+                 * TODO Отправка сообщение авторам
+                 */
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

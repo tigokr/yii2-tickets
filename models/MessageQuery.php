@@ -27,7 +27,7 @@ class MessageQuery extends \yii\db\ActiveQuery
     }
 
     public function abuse(){
-        $this->andWhere(['type', Message::TYPE_ABUSE]);
+        $this->andWhere(['type'=>Message::TYPE_ABUSE]);
         return $this;
     }
 
@@ -37,32 +37,47 @@ class MessageQuery extends \yii\db\ActiveQuery
     }
 
     public function error(){
-        $this->andWhere(['type', Message::TYPE_ERROR]);
+        $this->andWhere(['type'=>Message::TYPE_ERROR]);
         return $this;
     }
 
     public function offer(){
-        $this->andWhere(['type', Message::TYPE_OFFER]);
+        $this->andWhere(['type'=>Message::TYPE_OFFER]);
         return $this;
     }
 
     public function newmessages(){
-        $this->andWhere(['status', Message::STATUS_NEW]);
+        $this->andWhere(['status'=>Message::STATUS_NEW]);
         return $this;
     }
 
     public function inwork(){
-        $this->andWhere(['status', Message::STATUS_INWORK]);
+        $this->andWhere(['status'=>Message::STATUS_INWORK]);
         return $this;
     }
 
     public function solved(){
-        $this->andWhere(['status', Message::STATUS_SOLVED]);
+        $this->andWhere(['status'=>Message::STATUS_SOLVED]);
+        return $this;
+    }
+
+    public function notSolved(){
+        $this->andWhere(['!=', 'status', Message::STATUS_SOLVED]);
         return $this;
     }
 
     public function thread($thread){
         $this->andWhere(['=', 'thread', $thread]);
+        return $this;
+    }
+
+    public function own(){
+        $this->andWhere(['author_id'=>\Yii::$app->user->id]);
+        return $this;
+    }
+
+    public function last(){
+        $this->orderBy('created_at desc');
         return $this;
     }
 }
