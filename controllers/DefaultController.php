@@ -54,7 +54,6 @@ class DefaultController extends \yii\web\Controller
     public function actionIndex()
     {
         $searchModel = new MessageSearch();
-        $searchModel->status = Message::STATUS_NEW;
         $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
         if(!\Yii::$app->user->can('admin')) {
             $dataProvider->query->andWhere($searchModel->find()->notAbuse()->where);
